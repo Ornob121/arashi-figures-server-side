@@ -31,6 +31,18 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
+
+    // ! Shop by category api
+
+    const shopByCategoryCollection = client
+      .db("arashi-figures")
+      .collection("shop-by-category-toys");
+
+    app.get("/shopByCategory", async (req, res) => {
+      const result = await shopByCategoryCollection.find().toArray();
+      res.send(result);
+    });
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
