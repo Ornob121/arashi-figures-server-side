@@ -34,12 +34,31 @@ async function run() {
 
     // ! Shop by category api
 
-    const shopByCategoryCollection = client
+    const allToysCollection = client
       .db("arashi-figures")
-      .collection("shop-by-category-toys");
+      .collection("all-toys");
 
-    app.get("/shopByCategory", async (req, res) => {
-      const result = await shopByCategoryCollection.find().toArray();
+    app.get("/allToys", async (req, res) => {
+      const result = await allToysCollection.find().toArray();
+      res.send(result);
+    });
+
+    //! All Toys data with limit
+    app.get("/allToysLimit", async (req, res) => {
+      const limit = 20;
+      const result = await allToysCollection.find().limit(limit).toArray();
+      res.send(result);
+    });
+
+    //! Implement Search API
+    const indexKeys = { name: 1 };
+    const indexOptions = { name: "name" };
+    const result = await allToysCollection.createIndex(indexKeys, indexOptions);
+
+    app.get("/allToysSearch/:name", async (req, res) => {
+      const searchText = req.params.name;
+      const filter = { name: { $regex: searchText, $options: "i" } };
+      const result = await allToysCollection.find(filter).toArray();
       res.send(result);
     });
 
