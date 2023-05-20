@@ -1,5 +1,10 @@
 const express = require("express");
-const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
+const {
+  MongoClient,
+  ServerApiVersion,
+  ObjectId,
+  LEGAL_TCP_SOCKET_OPTIONS,
+} = require("mongodb");
 require("dotenv").config();
 const cors = require("cors");
 
@@ -67,6 +72,26 @@ async function run() {
       const searchText = req.params.name;
       const filter = { name: { $regex: searchText, $options: "i" } };
       const result = await allToysCollection.find(filter).toArray();
+      res.send(result);
+    });
+
+    // ! My toys filtered with email
+    app.get("/myToys", async (req, res) => {
+      let query = {};
+      console.log(req.query.email);
+      if (req.query?.email) {
+        query = {
+          sellerEmail: req.query.email,
+        };
+      }
+      const result = await allToysCollection.find(query).toArray();
+      res.send(result);
+    });
+
+    // ! Add a toy api
+    app.post("/addAToy", async (req, res) => {
+      const newToy = req.body;
+      const result = await allToysCollection.insertOne(newToy);
       res.send(result);
     });
 
