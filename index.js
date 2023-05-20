@@ -125,6 +125,14 @@ async function run() {
       res.send(result);
     });
 
+    // ! Reviews API
+    const allReviews = client.db("arashi-figures").collection("all-reviews");
+
+    app.get("/allReviews", async (req, res) => {
+      const result = await allReviews.find().toArray();
+      res.send(result);
+    });
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
