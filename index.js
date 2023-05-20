@@ -95,6 +95,28 @@ async function run() {
       res.send(result);
     });
 
+    // ! Update toy api
+    app.put("/updateYourToy/:id", async (req, res) => {
+      const id = req.params.id;
+      const updatedToy = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const newToy = {
+        $set: {
+          name: updatedToy.name,
+          price: updatedToy.price,
+          rating: updatedToy.rating,
+          image: updatedToy.image,
+          sellerEmail: updatedToy.sellerEmail,
+          sellerName: updatedToy.name,
+          availableQuantity: updatedToy.availableQuantity,
+          subcategory: updatedToy.subcategory,
+        },
+      };
+      const result = await allToysCollection.updateOne(filter, newToy, options);
+      res.send(result);
+    });
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
