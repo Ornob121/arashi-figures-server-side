@@ -76,7 +76,9 @@ async function run() {
     });
 
     // ! My toys filtered with email
-    app.get("/myToys", async (req, res) => {
+    app.get("/myToys/:sortBy", async (req, res) => {
+      const sortBy = req.params.sortBy;
+      console.log(sortBy);
       let query = {};
       console.log(req.query.email);
       if (req.query?.email) {
@@ -84,9 +86,33 @@ async function run() {
           sellerEmail: req.query.email,
         };
       }
-      const result = await allToysCollection.find(query).toArray();
-      res.send(result);
+      if (sortBy === "default") {
+        const result = await allToysCollection.find(query).toArray();
+        res.send(result);
+      }
+      if (sortBy === "priceUp") {
+        const result = await allToysCollection
+          .find(query)
+          .sort({ price: -1 })
+          .toArray();
+        res.send(result);
+      }
+      if (sortBy === "priceDown") {
+        const result = await allToysCollection
+          .find(query)
+          .sort({ price: 1 })
+          .toArray();
+        res.send(result);
+      }
     });
+
+    //! My toys with sort api
+    // app.get("/myToys/:sortBy", async (req, res) => {
+    //   const sort = req.params.sortBy;
+    //   if (sort === "priceUp") {
+    //     const result = await
+    //   }
+    // });
 
     // ! Add a toy api
     app.post("/addAToy", async (req, res) => {
