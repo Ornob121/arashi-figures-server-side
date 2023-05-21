@@ -35,7 +35,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    //  await  client.connect();
+    // await client.connect();
 
     // ! Shop by category api
 
@@ -93,14 +93,14 @@ async function run() {
       if (sortBy === "priceUp") {
         const result = await allToysCollection
           .find(query)
-          .sort({ price: 1 })
+          .sort({ price: -1 })
           .toArray();
         res.send(result);
       }
       if (sortBy === "priceDown") {
         const result = await allToysCollection
           .find(query)
-          .sort({ price: -1 })
+          .sort({ price: 1 })
           .toArray();
         res.send(result);
       }
