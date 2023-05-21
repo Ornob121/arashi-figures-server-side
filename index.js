@@ -35,7 +35,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    //  await  client.connect();
 
     // ! Shop by category api
 
@@ -93,26 +93,26 @@ async function run() {
       if (sortBy === "priceUp") {
         const result = await allToysCollection
           .find(query)
-          .sort({ price: -1 })
+          .sort({ price: 1 })
           .toArray();
         res.send(result);
       }
       if (sortBy === "priceDown") {
         const result = await allToysCollection
           .find(query)
-          .sort({ price: 1 })
+          .sort({ price: -1 })
           .toArray();
         res.send(result);
       }
     });
 
-    //! My toys with sort api
-    // app.get("/myToys/:sortBy", async (req, res) => {
-    //   const sort = req.params.sortBy;
-    //   if (sort === "priceUp") {
-    //     const result = await
-    //   }
-    // });
+    // ! Reviews API
+    const allReviews = client.db("arashi-figures").collection("all-reviews");
+
+    app.get("/allReviews", async (req, res) => {
+      const result = await allReviews.find().toArray();
+      res.send(result);
+    });
 
     // ! Add a toy api
     app.post("/addAToy", async (req, res) => {
@@ -148,14 +148,6 @@ async function run() {
       const id = req.params.id;
       const filter = { _id: new ObjectId(id) };
       const result = await allToysCollection.deleteOne(filter);
-      res.send(result);
-    });
-
-    // ! Reviews API
-    const allReviews = client.db("arashi-figures").collection("all-reviews");
-
-    app.get("/allReviews", async (req, res) => {
-      const result = await allReviews.find().toArray();
       res.send(result);
     });
 
